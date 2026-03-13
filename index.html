@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 小游戏合集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #e94560;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(233, 69, 96, 0.5);
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: #e94560;
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.4);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .game-title {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .game-desc {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .game-card.coming-soon {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .game-card.coming-soon:hover {
+            transform: none;
+            border-color: transparent;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: #e94560;
+            text-decoration: none;
+        }
+
+        /* 游戏容器 */
+        #game-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        #game-container.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-frame {
+            width: 100%;
+            max-width: 800px;
+            height: 80vh;
+            border: none;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .close-game {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .close-game:hover {
+            background: #c73e54;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 AI 小游戏合集</h1>
+        <p class="subtitle">点击卡片开始游戏</p>
+        
+        <div class="games-grid">
+            <!-- 记忆翻牌 -->
+            <div class="game-card" onclick="playGame('memory')">
+                <span class="game-icon">🧠</span>
+                <div class="game-title">记忆翻牌</div>
+                <div class="game-desc">翻转卡片配对相同图案，锻炼记忆力</div>
+            </div>
+            
+            <!-- 更多游戏将陆续添加 -->
+            <div class="game-card coming-soon">
+                <span class="game-icon">🎲</span>
+                <div class="game-title">猜数字</div>
+                <div class="game-desc">即将上线...</div>
+            </div>
+            
+            <div class="game-card coming-soon">
+                <span class="game-icon">🐍</span>
+                <div class="game-title">贪吃蛇</div>
+                <div class="game-desc">即将上线...</div>
+            </div>
+            
+            <div class="game-card coming-soon">
+                <span class="game-icon">🧩</span>
+                <div class="game-title">拼图游戏</div>
+                <div class="game-desc">即将上线...</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🎯 由 AI 助手提供 | <a href="https://github.com">GitHub</a></p>
+        </footer>
+    </div>
+
+    <!-- 游戏容器 -->
+    <div id="game-container">
+        <button class="close-game" onclick="closeGame()">✕ 关闭游戏</button>
+        <iframe id="game-frame" class="game-frame" src=""></iframe>
+    </div>
+
+    <script>
+        // 更新这里指向你的游戏页面URL
+        const GAMES = {
+            'memory': './memory-game.html'
+        };
+
+        function playGame(gameKey) {
+            const container = document.getElementById('game-container');
+            const frame = document.getElementById('game-frame');
+            
+            if (GAMES[gameKey]) {
+                frame.src = GAMES[gameKey];
+                container.classList.add('active');
+            }
+        }
+
+        function closeGame() {
+            const container = document.getElementById('game-container');
+            const frame = document.getElementById('game-frame');
+            container.classList.remove('active');
+            frame.src = '';
+        }
+
+        // ESC 键关闭游戏
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeGame();
+            }
+        });
+    </script>
+</body>
+</html>
